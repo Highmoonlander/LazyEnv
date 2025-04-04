@@ -9,6 +9,7 @@ pub enum AppState {
     InstallPackage,
     UninstallPackage,
     SearchEnvironment,
+    HelpMenu,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]

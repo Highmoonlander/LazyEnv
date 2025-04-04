@@ -1,0 +1,14 @@
+{
+  "name": "@highmoonlander/lazyenv",
+  "version": "0.1.0",
+  "bin": {
+    "lazyenv": "./bin/lazyenv"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Highmoonlander/LazyEnv.git"
+  },
+  "keywords": ["cli", "lazyenv", "python-env"],
+  "author": "Your Name",
+  "license": "MIT"
+}

@@ -69,6 +69,9 @@ pub fn ui(f: &mut Frame, app: &mut App) {
         AppState::SearchEnvironment => {
             render_input_dialog(f, "Search Environments", "Enter search term:", &app.input_text);
         },
+        AppState::HelpMenu => {
+            render_help_menu(f);
+        },
         _ => {}
     }
 }
@@ -78,6 +81,13 @@ fn render_environments(f: &mut Frame, app: &App, area: Rect) {
         "Python Environments (Global Packages)"
     } else {
         "Python Environments"
+    };
+
+    // Set border color based on focus
+    let border_style = if app.focus == Focus::Environments {
+        Style::default().fg(Color::Cyan)
+    } else {
+        Style::default().fg(Color::Gray)
     };
 
     let environments: Vec<ListItem> = app
@@ -97,7 +107,7 @@ fn render_environments(f: &mut Frame, app: &App, area: Rect) {
         .collect();
 
     let environments_list = List::new(environments)
-        .block(Block::default().title(title).borders(Borders::ALL))
+        .block(Block::default().title(title).borders(Borders::ALL).border_style(border_style))
         .highlight_style(
             Style::default()
                 .bg(Color::Blue)
@@ -133,6 +143,13 @@ fn render_packages(f: &mut Frame, app: &App, area: Rect) {
         }
     };
 
+    // Set border color based on focus
+    let border_style = if app.focus == Focus::Packages {
+        Style::default().fg(Color::Cyan)
+    } else {
+        Style::default().fg(Color::Gray)
+    };
+
     // Render packages list
     let packages: Vec<ListItem> = app
         .packages
@@ -143,7 +160,7 @@ fn render_packages(f: &mut Frame, app: &App, area: Rect) {
         .collect();
 
     let packages_list = List::new(packages)
-        .block(Block::default().title(title).borders(Borders::ALL))
+        .block(Block::default().title(title).borders(Borders::ALL).border_style(border_style))
         .highlight_style(
             Style::default()
                 .bg(Color::Blue)
@@ -162,7 +179,9 @@ fn render_packages(f: &mut Frame, app: &App, area: Rect) {
         if idx < app.packages.len() {
             let pkg = &app.packages[idx];
             format!(
-                "Name: {}\nVersion: {}\nSummary: {}",
+                "Name: {}
+Version: {}
+Summary: {}",
                 pkg.name, pkg.version, pkg.summary
             )
         } else {
@@ -181,12 +200,12 @@ fn render_packages(f: &mut Frame, app: &App, area: Rect) {
     let help_text = match app.state {
         AppState::Normal => {
             if app.focus == Focus::Environments {
-                "↑/↓: Navigate | Tab: Switch focus | Enter: View packages | n: New env | d: Delete env | s: Search | g: Toggle global | R: Refresh | q: Quit"
+                "Press 'x' for help | Tab: Switch focus | Enter: View packages"
             } else {
-                "↑/↓: Navigate | Tab: Switch focus | i: Install pkg | r: Remove pkg | q: Quit"
+                "Press 'x' for help | Tab: Switch focus"
             }
         },
-        AppState::PackageView => "↑/↓: Navigate | Tab: Switch focus | i: Install pkg | r: Remove pkg | Esc: Back | q: Quit",
+        AppState::PackageView => "Press 'x' for help | Tab: Switch focus | Esc: Back",
         _ => "",
     };
 
@@ -201,6 +220,71 @@ fn render_packages(f: &mut Frame, app: &App, area: Rect) {
     };
 
     f.render_widget(help_widget, help_area);
+}
+
+fn render_help_menu(f: &mut Frame) {
+    let area = centered_rect(70, 70, f.size());
+    
+    // Clear the area
+    f.render_widget(Clear, area);
+    
+    // Create a block for the help menu
+    let help_block = Block::default()
+        .title("LazyEnv Help")
+        .borders(Borders::ALL)
+        .style(Style::default().bg(Color::DarkGray));
+    
+    f.render_widget(help_block, area);
+    
+    // Create the inner area for content
+    let inner_area = Rect {
+        x: area.x + 2,
+        y: area.y + 1,
+        width: area.width - 4,
+        height: area.height - 2,
+    };
+    
+    // Help content
+    let help_content = "
+NAVIGATION
+↑/↓: Navigate through list
+Tab: Switch focus between environments and packages
+Enter: View packages for selected environment
+
+ENVIRONMENT MANAGEMENT
+n: Create new environment
+d: Delete selected environment
+s: Search environments
+g: Toggle between environment packages and global packages
+R: Refresh environment list
+
+PACKAGE MANAGEMENT
+i: Install package in selected environment
+r: Remove selected package
+
+OTHER
+x: Show/hide this help menu
+q: Quit application
+Esc: Go back / Cancel current operation
+";
+    
+    let help_widget = Paragraph::new(help_content)
+        .style(Style::default().fg(Color::White));
+    
+    f.render_widget(help_widget, inner_area);
+    
+    // Render footer
+    let footer_area = Rect {
+        x: inner_area.x,
+        y: inner_area.y + inner_area.height - 1,
+        width: inner_area.width,
+        height: 1,
+    };
+    
+    let footer_widget = Paragraph::new("Press 'x' or Esc to close this menu")
+        .style(Style::default().fg(Color::Yellow));
+    
+    f.render_widget(footer_widget, footer_area);
 }
 
 fn render_status_bar(f: &mut Frame, app: &App, area: Rect) {

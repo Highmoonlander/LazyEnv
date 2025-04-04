@@ -150,6 +150,9 @@ fn main() -> Result<(), io::Error> {
                                 }
                             }
                         },
+                        KeyCode::Char('x') => {
+                            app.state = AppState::HelpMenu;
+                        },
                         _ => {}
                     },
                     AppState::PackageView => match key.code {
@@ -174,6 +177,15 @@ fn main() -> Result<(), io::Error> {
                                     }
                                 }
                             }
+                        },
+                        KeyCode::Char('x') => {
+                            app.state = AppState::HelpMenu;
+                        },
+                        _ => {}
+                    },
+                    AppState::HelpMenu => match key.code {
+                        KeyCode::Esc | KeyCode::Char('x') => {
+                            app.state = AppState::Normal;
                         },
                         _ => {}
                     },
