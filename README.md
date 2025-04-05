@@ -59,7 +59,7 @@ lazyenv
 	•	s — Search environments
 	•	R — Refresh environment list
 
-Package Actions
+### Package Actions
 	•	i — Install new package
 	•	r — Remove selected package
 	•	g — Toggle global/environment packages
