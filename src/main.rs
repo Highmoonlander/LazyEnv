@@ -12,7 +12,7 @@ use crossterm::{
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
 
-use crate::app::{App, AppState, DialogState};
+use crate::app::{App, AppState, DialogState, Focus};
 use crate::ui::ui;
 use crate::python::{list_environments, list_packages, create_environment, delete_environment, install_package, uninstall_package};
 
@@ -58,8 +58,20 @@ fn main() -> Result<(), io::Error> {
                 match app.state {
                     AppState::Normal => match key.code {
                         KeyCode::Char('q') => break,
-                        KeyCode::Down => app.next_environment(),
-                        KeyCode::Up => app.previous_environment(),
+                        KeyCode::Down => {
+                            if app.focus == Focus::Environments {
+                                app.next_environment();
+                            } else if app.focus == Focus::Packages {
+                                app.next_package();
+                            }
+                        },
+                        KeyCode::Up => {
+                            if app.focus == Focus::Environments {
+                                app.previous_environment();
+                            } else if app.focus == Focus::Packages {
+                                app.previous_package();
+                            }
+                        },
                         KeyCode::Tab => app.toggle_focus(),
                         KeyCode::Enter => {
                             if let Some(idx) = app.selected_environment {

@@ -1,6 +1,6 @@
 {
   "name": "@highmoonlander/lazyenv",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "bin": {
     "lazyenv": "./bin/lazyenv"
   },
