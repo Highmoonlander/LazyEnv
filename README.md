@@ -45,7 +45,7 @@ lazyenv
 ```
 ## 🎮 Keyboard Controls
 
-General
+### General
 	•	↑ / ↓ — Move selection
 	•	Tab — Switch focus (envs <-> packages)
 	•	Enter — View packages in selected environment
@@ -53,7 +53,7 @@ General
 	•	q — Quit application
 	•	x — Toggle help menu
 
-Environment Actions
+### Environment Actions
 	•	n — Create new environment
 	•	d — Delete selected environment
 	•	s — Search environments
